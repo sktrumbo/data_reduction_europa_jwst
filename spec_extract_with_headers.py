@@ -1,15 +1,9 @@
-import matplotlib
 import pickle
-import pdb
-import requests
 import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
 from scipy import interpolate
-import scipy.ndimage as ndimg
 from get_ephemerides import get_ephemerides
-import matplotlib.path as mpltPath
-from PIL import Image
 from scipy.io import readsav
 import scipy.signal
 from scipy.optimize import curve_fit
@@ -39,19 +33,11 @@ def spec_extract_with_headers(filename, path=''):
         cube =new_cubes['s2']
 
     gstars = readsav('gstars.sav')
-    savename = path + 'specs_' + filename[:-5] + '_with_spikes_new.p'
+    savename = path + 'specs_' + filename[:-5] + '_new.p'
     pa_aper = hdulist[1].header['PA_APER']
     plate_scale = 0.1
-    crval1 = hdulist[1].header['CRVAL1']
-    crval2 = hdulist[1].header['CRVAL2']
     crval3 = hdulist[1].header['CRVAL3']
-    cdelt1 = hdulist[1].header['CDELT1']
-    cdelt2 = hdulist[1].header['CDELT2']
     cdelt3 = hdulist[1].header['CDELT3']
-    crpix1 = hdulist[1].header['CRPIX1']
-    crpix2 = hdulist[1].header['CRPIX2']
-    crpix3 = hdulist[1].header['CRPIX3']
-    filter = hdulist[0].header['FILTER']
     grating = hdulist[0].header['GRATING']
     detector = hdulist[0].header['DETECTOR']
     target = hdulist[0].header['TARGNAME']
@@ -101,9 +87,6 @@ def spec_extract_with_headers(filename, path=''):
     ang_diam = float(horizons_data[0][3])
     central_lon = float(horizons_data[0][4])
     central_lat = float(horizons_data[0][5])
-    sub_sun_lon = float(horizons_data[0][8])
-    sub_sun_lat = float(horizons_data[0][9])
-    jup_sun_dist = float(horizons_data[0][10])
     heliocentric_v = float(horizons_data[0][11])
     geocentric_v = float(horizons_data[0][13])
     pa_target = (pa_aper - npa) - 90
@@ -111,10 +94,8 @@ def spec_extract_with_headers(filename, path=''):
     central_lon = central_lon * np.pi / 180
     central_lat = central_lat * np.pi / 180
     central_lon = -central_lon
-    sub_sun_lon = -sub_sun_lon
     ang_rad = ang_diam / 2.
     pixel_rad = ang_rad / plate_scale
-    num_pixels = ang_diam / plate_scale
 
     #find center by maximizing flux inside circle with radius pixel_rad
     flux_square = np.nanmedian(cube, axis=0)
@@ -145,7 +126,7 @@ def spec_extract_with_headers(filename, path=''):
                 y_center = y_new[j]
 
     print('Center:', (x_center, y_center))
-    fig1 = plt.figure()
+    plt.figure()
     plt.imshow(flux_square, origin='lower')
     plt.scatter(x_center, y_center, c='red')
     circle = plt.Circle((x_center, y_center), pixel_rad, fill=False, color='red', linewidth=2.0)
@@ -208,16 +189,11 @@ def spec_extract_with_headers(filename, path=''):
 
     scale_factor_star = 5
     wvl_new = np.linspace(wvl_star[0], wvl_star[-1], scale_factor_star * len(wvl_star))
-    star_upsampled = np.interp(wvl_new, wvl_star, star)
 
-    fig2 = plt.figure()
-
-    # load in super high-res solar model
+    # load in solar model
     solar = np.loadtxt('solar_kurucz.txt')
     solar_wvl = solar[:, 0] / 1000.
     solar_spec = solar[:, 1]
-    solar_norm = solar[:, 1] / solar[:, 2]
-    solar_norm = solar_norm[((solar_wvl >= wvl[0] - .25) & (solar_wvl <= wvl[-1] + .25))]
     solar_spec = solar_spec[((solar_wvl >= wvl[0] - .25) & (solar_wvl <= wvl[-1] + .25))]
     solar_wvl = solar_wvl[((solar_wvl > wvl[0] - .25) & (solar_wvl < wvl[-1] + .25))]
 

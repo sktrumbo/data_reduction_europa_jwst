@@ -1,4 +1,3 @@
-import urllib
 import requests
 
 code = {'Mercury':'199', 'Venus':'299', 'Earth':'399', 'Mars':'499',
@@ -9,7 +8,6 @@ code = {'Mercury':'199', 'Venus':'299', 'Earth':'399', 'Mars':'499',
 
 def get_ephemerides(target,Tstart,Tend) :
 
-    dt      = 22*3600. # time interval [s]
     http = "https://ssd.jpl.nasa.gov/horizons_batch.cgi?batch=1"
     make_ephem = "&MAKE_EPHEM='YES'&TABLE_TYPE='OBSERVER'"
     command    = "&COMMAND=" + code[ target ]
