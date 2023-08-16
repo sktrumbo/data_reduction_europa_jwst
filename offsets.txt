@@ -1,0 +1,9 @@
+# some of this is saturated but some could be recovered
+EUROPA_G140H_1_NRS2_002_g140h-f100lp_s3d.fits	00 00
+EUROPA_G140H_2_NRS2_002_g140h-f100lp_s3d.fits	3 -3
+# all ok from here I think
+EUROPA_G235H_1_NRS2_002_g235h-f170lp_s3d.fits	00 00
+EUROPA_G235H_2_NRS2_002_g235h-f170lp_s3d.fits	3 -3
+#
+EUROPA_G395H_1_NRS2_002_g395h-f290lp_s3d.fits	0 0
+EUROPA_G395H_2_NRS2_002_g395h-f290lp_s3d.fits	3 -3

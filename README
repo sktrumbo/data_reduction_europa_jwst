@@ -1,0 +1,10 @@
+Procedure to generate combined Europa spectral cubes
+
+1. Download all "cal" and "rate" files from Program 1250, observation #2.
+2. In IDL, run "pipeall.pro", which will perform the 1/f noise removal
+   and run the JWST Level 2 pipeline on the cleaned data, creating
+   data cubes in the "IFUalign" coordinate system
+3. Combine multiple dithers with "postproc.pro" in IDL.
+4. "get_spectra.py" depends on "get_ephemerides.py" and can be used to extract spectra,
+   divide by a stellar spectrum, and calculate coordinates using information from a JPL Horizons
+   query.
